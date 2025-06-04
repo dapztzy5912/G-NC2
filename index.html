@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Image to Ghibli</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #fdf6e3; }
+    input, button { padding: 10px; margin: 10px; }
+    img { max-width: 90%; margin-top: 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Convert Image to Ghibli Style</h1>
+  <form id="convertForm">
+    <input type="url" id="imageUrl" placeholder="Enter Image URL" required />
+    <button type="submit">Convert</button>
+  </form>
+  <div id="result">
+    <h2>Output:</h2>
+    <img id="ghibliImage" src="" alt="Ghibli Image" />
+  </div>
+
+  <script>
+    const form = document.getElementById('convertForm');
+    const image = document.getElementById('ghibliImage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('imageUrl').value;
+
+      image.src = ''; // Clear previous
+      const res = await fetch('/api/convert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: url })
+      });
+
+      const data = await res.json();
+      if (data.image) {
+        image.src = data.image;
+      } else {
+        alert('Failed to convert image');
+      }
+    });
+  </script>
+</body>
+</html>
